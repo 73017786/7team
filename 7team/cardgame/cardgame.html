@@ -1,149 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-</head>
-
-<body>
-  <canvas id="myCanvas" width="900" height="600" style="border: 2px solid">
-  </canvas>
-  <script>
-
-    var count = 0;
-    const word = [
-      "격노한",
-      "기뻐하는",
-      "기진맥진한",
-      "낙관적인",
-      "만족하는",
-      "무기력한",
-      "불만스러운",
-      "에대해사과하다",
-      "우울한",
-      "유익한",
-      "즐거워하는",
-      "피로한",
-      "furious",
-      "delighted",
-      "exhausted",
-      "optimistic",
-      "content",
-      "listless",
-      "frustrating",
-      "apologize for",
-      "miserable",
-      "informative",
-      "amused",
-      "fatigued",
-    ];
-    let board = new Array(4);
-    let open = new Array(4);
-    for (var i = 0; i < board.length; i++) {
-      board[i] = new Array(6);
-      open[i] = new Array(6);
-    }
-    let deck = [];
-    for (let i = 0; i < word.length; i++) {
-      deck[i] = i;
-    }
-    for (var i = 0; i < 4; i++) {
-      for (var j = 0; j < 6; j++) {
-        let radnum = Math.floor(Math.random() * deck.length);
-        board[i][j] = deck[radnum];
-        deck.splice(radnum, 1);
-        open[i][j] = false;
+  <body>
+    <canvas id="myCanvas" width="900" height="600" style="border: 2px solid">
+    </canvas>
+    <script>
+      var count = 0;
+      const word = [
+        "격노한",
+        "기뻐하는",
+        "기진맥진한",
+        "낙관적인",
+        "만족하는",
+        "무기력한",
+        "불만스러운",
+        "에대해사과하다",
+        "우울한",
+        "유익한",
+        "즐거워하는",
+        "피로한",
+        "furious",
+        "delighted",
+        "exhausted",
+        "optimistic",
+        "content",
+        "listless",
+        "frustrating",
+        "apologize for",
+        "miserable",
+        "informative",
+        "amused",
+        "fatigued",
+      ];
+      let board = new Array(4);
+      let open = new Array(4);
+      for (var i = 0; i < board.length; i++) {
+        board[i] = new Array(6);
+        open[i] = new Array(6);
       }
-    }
-
-    const imgs = [];
-    const imgWidth = 150;
-    const imgHeight = 150;
-    const floorcardnum = 24;
-    myCanvas.width = imgWidth * 6;
-    myCanvas.height = imgHeight * 4;
-
-    var total = 0;
-    let clickFlag = true;
-    let CardOne, CardTwo;
-    let prevRow = -1;
-    let prevCol = -1;
-
-    function PushwordCards2() {
-      clickFlag = false;
-      for (var i = 0; i < word.length; i++) {
-        imgs.push(new Image());
-        imgs[i].src = "word/" + word[i] + ".jpg";
+      let deck = [];
+      for (let i = 0; i < word.length; i++) {
+        deck[i] = i;
       }
-    }
-    PushwordCards2();
-    var ctx = myCanvas.getContext("2d");
-
-    function OpenOneCard(row, col) {
-      ctx.drawImage(imgs[board[row][col]], col * imgWidth, row * imgHeight);
-    }
-
-    function OpenAllCard() {
       for (var i = 0; i < 4; i++) {
         for (var j = 0; j < 6; j++) {
-          OpenOneCard(i, j);
+          let radnum = Math.floor(Math.random() * deck.length);
+          board[i][j] = deck[radnum];
+          deck.splice(radnum, 1);
+          // deck배열 안에 있는 걸 삭제하는 것을 통해
+          // 같은 것이 board 배열에 들어가지 않도록 없애주는 것
+          open[i][j] = false;
         }
       }
-    }
 
-    function CloseOneCard(row, col) {
-      ctx.fillStyle = "navy";
-      ctx.fillRect(col * imgWidth, row * imgHeight, imgWidth, imgHeight);
-      ctx.strokeStyle = "white";
-      ctx.strokeRect(col * imgWidth, row * imgHeight, imgWidth, imgHeight);
-    }
+      const imgs = [];
+      const imgWidth = 150;
+      const imgHeight = 150;
+      const floorcardnum = 24;
+      myCanvas.width = imgWidth * 6;
+      myCanvas.height = imgHeight * 4;
 
-    function CloseAllCard() {
-      for (var i = 0; i < 4; i++) {
-        for (var j = 0; j < 6; j++) {
-          CloseOneCard(i, j);
+      let prevRow = -1;
+      let prevCol = -1;
+
+      function PushwordCards() {
+        for (var i = 0; i < word.length; i++) {
+          imgs.push(new Image());
+          imgs[i].src = "word/" + word[i] + ".jpg";
         }
       }
-    }
+      PushwordCards();
 
+      var ctx = myCanvas.getContext("2d");
 
-    window.onload = function () {
-      setTimeout(OpenAllCard, 500);
-      setTimeout(CloseAllCard, 10000);
-    };
+      function OpenOneCard(row, col) {
+        ctx.drawImage(imgs[board[row][col]], col * imgWidth, row * imgHeight);
+      }
 
-    function restoreCard(row, col, prevRow, prevCol) {
-      CloseOneCard(prevRow, prevCol);
-      open[prevRow][prevCol] = false;
-      CloseOneCard(row, col);
-      open[row][col] = false;
-    }
-    function MyMouseDownHandler(MyEvent) { 
-      var col = Math.floor(MyEvent.offsetX / imgWidth);
-      var row = Math.floor(MyEvent.offsetY / imgHeight);
-      if (row < 4 && col < 6 && !open[row][col]) {
-        count++;
-        open[row][col] = true;
-        OpenOneCard(row, col)
-        if (count % 2 == 0) {
-          if (board[prevRow][prevCol]%12 != board[row][col]%12) {
-            let tmpRow = prevRow;
-            let tmpCol = prevCol;
-            setTimeout(function () {
-              restoreCard(row, col, tmpRow, tmpCol);
-            }, 1000);
+      function OpenAllCard() {
+        for (var i = 0; i < 4; i++) {
+          for (var j = 0; j < 6; j++) {
+            OpenOneCard(i, j);
           }
         }
-        prevRow = row;
-        prevCol = col;
       }
-    }
-    addEventListener("click", MyMouseDownHandler);
 
-  </script>
-</body>
+      function CloseOneCard(row, col) {
+        ctx.fillStyle = "navy";
+        ctx.fillRect(col * imgWidth, row * imgHeight, imgWidth, imgHeight);
+        ctx.strokeStyle = "white";
+        ctx.strokeRect(col * imgWidth, row * imgHeight, imgWidth, imgHeight);
+      }
 
+      function CloseAllCard() {
+        for (var i = 0; i < 4; i++) {
+          for (var j = 0; j < 6; j++) {
+            CloseOneCard(i, j);
+          }
+        }
+      }
+
+      window.onload = function () {
+        setTimeout(OpenAllCard, 500);
+        setTimeout(CloseAllCard, 3000);
+      };
+
+      function restoreCard(row, col, prevRow, prevCol) {
+        CloseOneCard(prevRow, prevCol);
+        open[prevRow][prevCol] = false;
+        CloseOneCard(row, col);
+        open[row][col] = false;
+      }
+      function MyMouseDownHandler(MyEvent) {
+        var col = Math.floor(MyEvent.offsetX / imgWidth);
+        var row = Math.floor(MyEvent.offsetY / imgHeight);
+        if (row < 4 && col < 6 && !open[row][col]) {
+          count++;
+          open[row][col] = true;
+          OpenOneCard(row, col);
+          if (count % 2 == 0) {
+            if (board[prevRow][prevCol] % 12 != board[row][col] % 12) {
+              let tmpRow = prevRow;
+              let tmpCol = prevCol;
+              setTimeout(function () {
+                restoreCard(row, col, tmpRow, tmpCol);
+              }, 1000);
+            }
+          }
+          prevRow = row;
+          prevCol = col;
+        }
+      }
+      addEventListener("click", MyMouseDownHandler);
+    </script>
+  </body>
 </html>
