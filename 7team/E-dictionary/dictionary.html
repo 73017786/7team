@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=\, initial-scale=1.0">
+    <title>영어사전</title>
+    <style>
+        #wrap { font-size: 20px; background:url(note.png) no-repeat center center; background-size: cover;}
+        .area { display: flex; justify-content: center; margin: 0 200px 0 200px;}
+        
+        ul { list-style: none; display: flex; justify-content: space-between; flex-wrap: wrap; flex-direction: row; padding: 10px 0 10px 0; border: 1px solid black;}
+        ul li { width: 400px; text-align: center; border-bottom: 1px solid #643232;}
+        .en { margin-right: -1px}
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <div class="area">
+            <ul class="en">
+
+            </ul>
+            <ul class="ko">
+
+            </ul>
+        </div>
+    </div>
+</body>
+<script>
+    let word = [ 
+        {
+            en: 'collate',
+            ko: '대조하다'
+        },
+        {
+            en: 'release',
+            ko: '방출'
+        },
+        {
+            en: 'organize',
+            ko: '준비하다'
+        },
+        {
+            en: 'diagnosis',
+            ko: '진단'
+        },
+        {
+            en: 'petiton',
+            ko: '청원'
+        },
+        {
+            en: 'athletics',
+            ko: '체육'
+        },
+        {
+            en: 'marginal',
+            ko: '최저의'
+        },
+        {
+            en: 'sensible',
+            ko: '현명한'
+        },
+        {
+            en: 'bookkeeper',
+            ko: '회계장부담당자'
+        },
+        {
+            en: 'furious',
+            ko: '격노한'
+        },
+        {
+            en: 'delighted',
+            ko: '기뻐하는'
+        },
+        {
+            en: 'exhausted',
+            ko: '기진맥진한'
+        },
+        {
+            en: 'optimistic',
+            ko: '낙관적인'
+        },
+        {
+            en: 'content',
+            ko: '만족하는'
+        },
+        {
+            en: 'listless',
+            ko: '무기력한'
+        },
+        {
+            en: 'frustrating',
+            ko: '불만스러운'
+        },
+        {
+            en: 'apologize for',
+            ko: '에 대해 사과하다'
+        },
+        {
+            en: 'miserable',
+            ko: '우울한'
+        },
+        {
+            en: 'informative',
+            ko: '유익한'
+        },
+        {
+            en: 'amused',
+            ko: '즐거워하는'
+        },
+        {
+            en: 'fatigued',
+            ko: '피로한'
+        }
+    ];
+
+    let en_html ='';
+    let ko_html ='';
+
+    for (let i=0; i<word.length; i++) {
+        en_html += `
+                <li>
+                    <p><strong>${word[i].en}</strong></p>
+                </li>`;
+
+        ko_html += `
+                <li>
+                    <p>${word[i].ko}</p>
+                </li>`;
+    }
+    document.querySelector('.en').innerHTML = en_html;
+    document.querySelector('.ko').innerHTML = ko_html;
+</script>
+
+</html>

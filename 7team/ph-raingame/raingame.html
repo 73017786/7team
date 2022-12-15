@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>산성비 게임</title>
+</head>
+
+
+<body>
+    <canvas id=myCanvas width=1280 height=800 style="background:url(background.png)"></canvas>
+    <script>
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        var Word_x = 0;
+        var Word_y = 0;
+        var score = 0;
+        var Planetimge = new Image();
+        const text_width = 400;
+        const text_height = 50;
+        const text_x = canvas.width / 2 - text_width / 2;
+        const text_y = canvas.height - text_height;
+        var input_text = "";
+        var select = RandInt(9);
+        var Word_speedup= 0;
+        var timer = 20;
+        var StartLevel_Selection = prompt("난이도를 정해주세요(1~2)", " ");
+        
+        let Word = ['대조하다', '방출', '준비하다', '진단', '청원', '체육', '최저의', '현명한', '회계장부담당자']
+        
+        function RandInt(up_to) {
+            n = Math.floor(Math.random() * up_to);
+            return (n);
+        }
+
+        Planetimge.src = "word/e" + select + ".png";
+
+        function restart_game() {
+            timer = 20;
+            score = 0;
+            Word_y = 0;
+        }
+
+        function Level_1() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "red";
+            ctx.font = "25px Arial";
+            ctx.textAlign = "left";
+            ctx.fillText("Score: " + score, 0, 20);
+            ctx.fillText("남은시간: " + Math.round(timer), 0, 45);
+            
+            if (timer <= 0) {
+                if (score >= 500) {
+                    ctx.fillStyle = "red";
+                    ctx.font = "bold 50px Arial";
+                    ctx.textAlign = "center";
+                    ctx.fillText("You Win", myCanvas.width / 2, myCanvas.height / 2);
+                    ctx.textAlign = "center";
+                    ctx.font = "bold 20px Arial";
+                    ctx.fillText("Press Enter to Play next level", myCanvas.width / 2, (myCanvas.height / 2) + 50);
+                }
+                else {
+                    ctx.fillStyle = "red";
+                    ctx.font = "bold 50px Arial";
+                    ctx.textAlign = "center";
+                    ctx.fillText("Game over", myCanvas.width / 2, myCanvas.height / 2);
+                    ctx.font = "bold 20px Arial";
+                    ctx.fillText("Press Enter to Play again", myCanvas.width / 2, (myCanvas.height / 2) + 50);
+                    ctx.textAlign = "center";
+                }
+            }
+            else {
+                timer = timer - 1 / 40;
+                Word_y = Word_y + 5;
+                if (Word_y > myCanvas.height) {
+                    Word_y = 0;
+                    score = score - 50;
+                    select = RandInt(9);
+                    Planetimge.src = "word/e" + select + ".png";
+                    Word_x = Math.random() * (myCanvas.width - Planetimge.width);
+                }
+
+            }
+            ctx.drawImage(Planetimge, Word_x, Word_y);
+        }
+
+
+        function Level_2() {
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "red";
+            ctx.font = "25px Arial";
+            ctx.textAlign = "left";
+            ctx.fillText("Score: " + score, 0, 20);
+            ctx.fillText("남은시간: " + Math.round(timer), 0, 45);
+
+            if (timer <= 0) {
+                if (score >= 700) {
+                    ctx.fillStyle = "red";
+                    ctx.font = "bold 50px Arial";
+                    ctx.textAlign = "center";
+                    ctx.fillText("You Win", myCanvas.width / 2, myCanvas.height / 2);
+                    ctx.textAlign = "center";
+                    ctx.font = "bold 20px Arial";
+                    ctx.fillText("Press Enter to Play next level", myCanvas.width / 2, (myCanvas.height / 2) + 50);
+                }
+                else {
+                    ctx.fillStyle = "red";
+                    ctx.font = "bold 50px Arial";
+                    ctx.textAlign = "center";
+                    ctx.fillText("Game over", myCanvas.width / 2, myCanvas.height / 2);
+                    ctx.font = "bold 20px Arial";
+                    ctx.fillText("Press Enter to Play again", myCanvas.width / 2, (myCanvas.height / 2) + 50);
+                    ctx.textAlign = "center";
+                }
+            }
+            else {
+                
+                timer = timer - 1 / 40;
+                Word_y = Word_y + 5+ Word_speedup;
+                if (Word_y > myCanvas.height) {
+                    Word_y =0 ;
+                    score = score - 50;
+                    select = RandInt(9);
+                    Word_speedup = RandInt(20);
+                    Planetimge.src = "word/e" + select + ".png";
+                    Word_x = Math.random() * (myCanvas.width - Planetimge.width);
+                }
+
+            }
+            ctx.drawImage(Planetimge, Word_x, Word_y);
+        }
+        
+   
+        function MyKeyDownHandler(MyEvent) {
+            if (MyEvent.keyCode === 13 && input_text === Word[select]) {
+                score = score + 100;
+                this.value = "";
+                Word_y = 0;
+                select = RandInt(9);
+                Planetimge.src = "word/e" + select + ".png";
+                Word_x = Math.random() * (myCanvas.width - Planetimge.width);
+            }
+            if (StartLevel_Selection == 1) {
+                if (timer <= 0) {
+                    if (score < 500 && MyEvent.keyCode == 13)
+                        restart_game();
+                    else if (score >= 500 && MyEvent.keyCode == 13)
+                        StartLevel_Selection = prompt("축하합니다! 다른 난이도를 하실려면 F5를 눌러 진행해주세요!", "확인");
+
+                }
+            }
+            else if (StartLevel_Selection == 2) {
+                if (timer <= 0) {
+                    if (score < 700 && MyEvent.keyCode == 13)
+                        restart_game();
+                    else if (score >= 700 && MyEvent.keyCode == 13)
+                        StartLevel_Selection = prompt("클리어 하셨습니다. 축하합니다!~!", "축하합니다!~!~!~!~!");
+                }
+            }
+
+         input_text = this.value;
+        }
+
+        function ShowInputbox() {
+            var input = document.createElement('input');
+            input.type = 'text';
+            input.style.position = 'fixed';
+            input.style.left = text_x + 'px';
+            input.style.top = text_y + 'px';
+            input.style.width = text_width + 'px';
+            input.style.height = text_height + 'px';
+            input.style.fontSize = 20 + 'pt';
+            input.onkeydown = MyKeyDownHandler;
+            document.body.appendChild(input);
+            input.focus();
+        }
+        ShowInputbox();
+        
+        if (StartLevel_Selection == 1) {
+            var start = prompt("목표점수는 Score 500점 입니다!", "파이팅!");
+            setInterval(Level_1, 1000 / 40);
+            
+        }
+        else if (StartLevel_Selection == 2) {
+            var start = prompt("목표점수는 Score 700점 입니다!", "파이팅!");
+            setInterval(Level_2, 1000 / 40);
+        }
+            
+
+    </script>
+
+
+</body>
+
+</html>
